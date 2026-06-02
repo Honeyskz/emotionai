@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EmotionAI — Detector de Emociones</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <title>EmotionAI — ¡Detector de Emociones!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@400;700;800&display=swap" rel="stylesheet"/>
   <style>
     /* ── RESET & BASE ─────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0B0C10;
-      --surface:   #13151B;
-      --border:    #1F2230;
-      --text:      #C8CADB;
-      --text-dim:  #50546A;
-      --accent:    #E2E4F0;
+      --bg:        #FFF0F8;
+      --surface:   #FFFFFF;
+      --border:    #F9C0DD;
+      --text:      #5A3060;
+      --text-dim:  #B088C0;
+      --accent:    #E040A0;
 
       /* por emoción */
-      --c-feliz:      #F59E0B;
-      --c-triste:     #3B82F6;
-      --c-enojo:      #EF4444;
-      --c-sorpresa:   #F97316;
-      --c-neutral:    #6EE7B7;
-      --c-idle:       #2A2D3E;
+      --c-feliz:      #FFB800;
+      --c-triste:     #5B9CF6;
+      --c-enojo:      #FF5757;
+      --c-sorpresa:   #FF8C42;
+      --c-neutral:    #4DD9AC;
+      --c-idle:       #F9C0DD;
 
       --active-glow:  var(--c-idle);
       --active-color: var(--c-idle);
 
-      font-family: 'Syne', sans-serif;
+      font-family: 'Nunito', sans-serif;
     }
 
     body {
@@ -40,16 +40,41 @@
       align-items: center;
       padding: 2rem 1rem 3rem;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* ── NOISE OVERLAY ─────────────────────────────── */
+    /* ── FONDO CON ESTRELLAS Y PUNTOS DECORATIVOS ── */
     body::before {
       content: '';
       position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.025;
+      background-image:
+        radial-gradient(circle at 10% 20%, #FFD6EC 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, #D6EEFF 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #FFF5D6 0%, transparent 60%);
       pointer-events: none;
       z-index: 0;
+    }
+
+    /* ── CONFETI / ESTRELLAS FLOTANTES ───────────── */
+    .deco-star {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      font-size: 1.4rem;
+      opacity: 0.18;
+      animation: floaty 6s ease-in-out infinite;
+    }
+    .deco-star:nth-child(1)  { top: 5%;  left: 3%;  animation-delay: 0s;   font-size:1.8rem; }
+    .deco-star:nth-child(2)  { top: 12%; right: 6%; animation-delay: 1s;   font-size:1.2rem; }
+    .deco-star:nth-child(3)  { top: 35%; left: 1%;  animation-delay: 2s;   font-size:1.0rem; }
+    .deco-star:nth-child(4)  { top: 60%; right: 2%; animation-delay: 0.5s; font-size:1.6rem; }
+    .deco-star:nth-child(5)  { top: 80%; left: 5%;  animation-delay: 3s;   font-size:1.4rem; }
+    .deco-star:nth-child(6)  { top: 20%; right: 15%;animation-delay: 1.5s; font-size:1.1rem; }
+    .deco-star:nth-child(7)  { top: 75%; right: 8%; animation-delay: 2.5s; font-size:1.3rem; }
+    .deco-star:nth-child(8)  { top: 90%; left: 20%; animation-delay: 0.8s; font-size:1.0rem; }
+    @keyframes floaty {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-14px) rotate(12deg); }
     }
 
     /* ── HEADER ────────────────────────────────────── */
@@ -57,43 +82,51 @@
       width: 100%;
       max-width: 760px;
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       position: relative; z-index: 1;
     }
     .logo {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-    .logo span { color: var(--accent); }
-    .tpu-badge {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
+      font-family: 'Baloo 2', cursive;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.4s;
+      gap: 8px;
     }
-    .tpu-badge.connected { border-color: #6EE7B7; color: #6EE7B7; }
+    .logo span { color: var(--accent); }
+    .logo .logo-emoji { font-size: 26px; animation: bounce-logo 1.8s ease infinite; }
+    @keyframes bounce-logo {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .tpu-badge {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 50px;
+      border: 2.5px solid var(--border);
+      color: var(--text-dim);
+      background: white;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.4s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+    .tpu-badge.connected { border-color: #4DD9AC; color: #2AAA80; background: #EDFFF8; }
     .tpu-dot {
-      width: 6px; height: 6px;
+      width: 9px; height: 9px;
       border-radius: 50%;
-      background: var(--text-dim);
+      background: var(--border);
       transition: background 0.4s;
     }
     .tpu-badge.connected .tpu-dot {
-      background: #6EE7B7;
-      box-shadow: 0 0 6px #6EE7B7;
+      background: #4DD9AC;
+      box-shadow: 0 0 8px #4DD9AC;
       animation: blink 1.5s ease infinite;
     }
     @keyframes blink {
@@ -105,24 +138,25 @@
       width: 100%;
       max-width: 760px;
       position: relative; z-index: 1;
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
     }
 
     .emotion-hero {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.5rem 2rem 2rem;
+      background: white;
+      border: 3px solid var(--border);
+      border-radius: 32px;
+      padding: 2.2rem 2rem 2rem;
       display: flex;
       align-items: center;
       gap: 2rem;
       position: relative;
       overflow: hidden;
       transition: border-color 0.5s, box-shadow 0.5s;
+      box-shadow: 0 6px 24px rgba(200,100,160,0.10), 0 2px 0 var(--border);
     }
     .emotion-hero.active {
       border-color: var(--active-color);
-      box-shadow: 0 0 40px -10px var(--active-glow);
+      box-shadow: 0 8px 36px -6px var(--active-glow), 0 2px 0 var(--active-color);
     }
 
     /* glow sweep */
@@ -136,29 +170,31 @@
       transition: opacity 0.6s;
       pointer-events: none;
     }
-    .emotion-hero.active::before { opacity: 0.08; }
+    .emotion-hero.active::before { opacity: 0.12; }
 
     /* big face */
     .hero-face {
       flex-shrink: 0;
-      width: 100px; height: 100px;
+      width: 110px; height: 110px;
     }
     .hero-face svg { width: 100%; height: 100%; }
 
     .hero-info { flex: 1; }
     .hero-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.2em;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--text-dim);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
     .hero-emotion {
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
       font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--accent);
+      letter-spacing: -0.01em;
+      color: var(--text);
       text-transform: capitalize;
       line-height: 1;
       transition: color 0.4s;
@@ -166,30 +202,31 @@
     .hero-emotion.colored { color: var(--active-color); }
 
     .confidence-bar-wrap {
-      margin-top: 1.2rem;
+      margin-top: 1rem;
       display: flex;
       align-items: center;
       gap: 12px;
     }
     .confidence-bar {
       flex: 1;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
+      height: 10px;
+      background: #F5E6F5;
+      border-radius: 10px;
       overflow: hidden;
     }
     .confidence-fill {
       height: 100%;
-      border-radius: 2px;
+      border-radius: 10px;
       background: var(--active-color);
       width: 0%;
       transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.4s;
     }
     .confidence-pct {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
       color: var(--text-dim);
-      min-width: 36px;
+      min-width: 40px;
       text-align: right;
       transition: color 0.4s;
     }
@@ -198,21 +235,24 @@
     /* stats row */
     .stats-row {
       display: flex;
-      gap: 12px;
-      margin-top: 1.2rem;
+      gap: 10px;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
     .stat-chip {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      padding: 5px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 2px solid #F5E0F5;
+      background: #FDF5FF;
       color: var(--text-dim);
       display: flex;
       gap: 6px;
+      align-items: center;
     }
-    .stat-chip .val { color: var(--text); }
+    .stat-chip .val { color: var(--text); font-weight: 900; }
 
     /* ── FACES GRID ────────────────────────────────── */
     .faces-grid {

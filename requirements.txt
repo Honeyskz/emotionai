@@ -1,0 +1,34 @@
+# ── EmotionAI Web — requirements.txt ──────────────────────────────────────────
+#
+# Instalación completa:
+#   pip install -r requirements.txt
+#
+# Para Raspberry Pi con Coral USB Accelerator, ver install.sh
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Servidor web
+flask>=2.3.0
+flask-cors>=4.0.0
+
+# Visión por computadora
+opencv-python-headless>=4.8.0   # headless = sin GUI, ideal para Raspberry Pi
+
+# Inferencia TFLite (elige una de las dos opciones según tu entorno):
+# Opción A — runtime liviano (recomendado para Raspberry Pi)
+tflite-runtime>=2.13.0
+# Opción B — TensorFlow completo (comentar la línea de arriba si usás esta)
+# tensorflow>=2.13.0
+
+# Edge TPU (Coral) — instalación especial, ver install.sh
+# pycoral>=2.0.0   ← no se instala con pip directamente en Raspberry Pi
+
+# Numpy (requerido por OpenCV y TFLite)
+numpy>=1.24.0
+
+# Utilidades
+Pillow>=9.5.0          # procesamiento de imágenes auxiliar
+
+# ── Notas ──────────────────────────────────────────────────────────────────────
+# pycoral y tflite-runtime para Coral se instalan desde los repos de Google:
+#   https://coral.ai/docs/accelerator/get-started/
+# El install.sh automatiza esto para Raspberry Pi OS (Bullseye/Bookworm).

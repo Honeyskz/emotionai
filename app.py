@@ -44,7 +44,7 @@ CONFIDENCE_MIN  = 0.30     # descartar detecciones por debajo de este umbral
 FRAME_SKIP      = 2        # procesar 1 de cada N frames (reduce carga CPU)
 
 EMOTION_LABELS = ["enojado", "sorprendido", "neutral", "feliz", "triste"]
-# Ajustá este orden según las clases reales de tu modelo .tflite
+# Orden según las clases reales de tu modelo .tflite
 
 # ── Estado global compartido ──────────────────────────────────────────────────
 state = {
